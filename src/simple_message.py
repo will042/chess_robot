@@ -13,14 +13,7 @@ def coord2msg(x,y):
     a = .5
     v = 0.2
     msg = "movel(p[" + str(x) + ", " + str(y) + ", " + str(z) + ", " + str(rx) + ", " + str(ry) + ", " + str(rz) + "], a=" + str(a) + ", v=" + str(v) + ")"
-    print(msg)
+    print("Sent: ", msg)
     return msg
 
 s.pass_msg(coord2msg(-0.2,-0.05))
-
-
-
-
-
-
-def board_state

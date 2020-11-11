@@ -13,7 +13,7 @@ class ur_socket_connection:
 
         self.s.send ((msg + "\n").encode('utf8'))
         self.data = self.s.recv(1024)
-        print ("Received", ((self.data)))
+        print ("Received: ", ((self.data)))
 
     def close_socket(self):
 
