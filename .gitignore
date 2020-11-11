@@ -1,3 +1,5 @@
 /.vscode
 /chess_robot.code-workspace
 /chess_venv
+/__pycache__
+/echo_client_program.py
