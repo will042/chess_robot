@@ -1,0 +1,17 @@
+ Program
+   BeforeStart
+     socket1≔socket_open("192.168.0.7",8000)
+     movej([0,-3.1415/2, 3.1415/2, -3.1415/2, -3.1415/2, 0])
+   Robot Program
+     Loop
+       Loop socket1≟False
+         socket1≔socket_open("192.168.0.7",8000)
+         Wait: 0.5
+       pose_position≔get_actual_tcp_pose()
+       socket_send_string(pose_position)
+       Wait: 0.5
+       jj≔socket_read_ascii_float(5,timeout=0)
+       Wait: 0.5
+       socket1≔ False 
+       socket_close()
+       Script: chess_movement_program.script
