@@ -1,16 +1,64 @@
-zlow = 0.05
-zhigh = 0.4
+zlow = 0.04
+zhigh = 0.25
+xdump = -0.125
+ydump = -0.67
+gclose = 85
+gopen = 60
 
-pose1 = p[jj[2], jj[3], zlow, 3.1415, 0, 0]
-pose2 = p[jj[2], jj[3], zhigh, 3.1415, 0, 0]
-pose3 = p[jj[4], jj[5], zhigh, 3.1415, 0, 0]
-pose4 = p[jj[4], jj[5], zlow, 3.1415, 0, 0]
+pose1 = p[jj[2], jj[3], zlow, 2.2, -2.2, 0]     # x1,y1 low
+pose2 = p[jj[2], jj[3], zhigh, 2.2, -2.2, 0]    # x1,y1 high
+pose3 = p[jj[4], jj[5], zhigh, 2.2, -2.2, 0]    # x2,y2 high
+pose4 = p[jj[4], jj[5], zlow, 2.2, -2.2, 0]     # x2,y2 low
+
+pose5 = p[xdump, ydump, zhigh, 2.2, -2.2, 0]     #dump box 
+
 
 if jj[1] == 1 :
   movel(pose3)
   sleep(2)
   movel(pose4)
+  rq_move_and_wait_norm(gclose)
   sleep(2)
   movel(pose3)
   sleep(1)
+  movel(dump)
+  sleep(1)
+  rq_move_and_wait_norm(gopen)
+  sleep(1)
+  movel(pose2)
+  sleep(1)
+  movel(pose1)
+  sleep(1)
+  rq_move_and_wait_norm(gclose)
+  sleep(1)
+  movel(pose2)
+  sleep(1)
+  movel(pose3)
+  sleep(1)
+  movel(pose4)
+  sleep(1)
+  rq_move_and_wait_norm(gopen)
+  sleep(1)
+  movel(pose3)
 end
+
+if jj[1] == 0 #not occuppied
+  movel(pose2)
+  sleep(1)
+  movel(pose1)
+  sleep(1)
+  rq_move_and_wait_norm(gclose)
+  sleep(1)
+  movel(pose2)
+  sleep(1)
+  movel(pose3)
+  sleep(1)
+  movel(pose4)
+  sleep(1)
+  rq_move_and_wait_norm(gopen)
+  sleep(1)
+  movel(pose3)
+end
+
+
+movej([3.1415/2, -3.1415/2, 3.1415/2, -3.1415/2, -3.1415/2, -3.1415/2])

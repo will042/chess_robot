@@ -1,9 +1,14 @@
 import numpy as np 
 
 class chess_board:
-    def __init__(self, sidelength, x0, y0):
+    def __init__(self, x0, y0, x7, y7):
         self.board_state = np.array([[1, 1, 1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1, 1, 1],[0, 0, 0, 0, 0, 0, 0, 0],[0, 0, 0, 0, 0, 0, 0, 0],[0, 0, 0, 0, 0, 0, 0, 0],[0, 0, 0, 0, 0, 0, 0, 0],[1, 1, 1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1, 1, 1]])
-        self.coordinates = np.linspace(x0 + sidelength/8/2, y0 + sidelength - sidelength/8/2, 8)
+        # self.coordinates_x = np.linspace(x0 + sidelength/8/2, x0 - 7*sidelength/8, 8)
+        # self.coordinates_y = np.linspace(y0 + 7*sidelength/8, y0 + sidelength/8/2, 8)
+        self.coordinates_x = np.linspace(x0, x7, 8)
+        self.coordinates_y = np.linspace(y0, y7, 8)
+        print(self.coordinates_x)
+        print(self.coordinates_y)
         # [self.coordinates_x, self.coordinates_y] = np.meshgrid(x0 + self.sidelength_dummy, y0 + self.sidelength_dummy)
 
 
@@ -19,7 +24,7 @@ class chess_board:
 
 
     def get_xy(self, Row, Col):
-        return [self.coordinates[Row], self.coordinates[Col]]
+        return [self.coordinates_x[Col],self.coordinates_y[Row]]
 
 
     def update_board(self, Row1, Col1, Row2, Col2):
@@ -44,3 +49,4 @@ class chess_board:
         self.tuple = self.occupied_flag, self.point1x, self.point1y, self.point2x, self.point2y
         self.string = '(' + ', '.join(self.tuple) + ')'
         return self.string
+ 
