@@ -1,4 +1,7 @@
-# Used to serve messages to the UR5
+"""
+Used for communicating with the Universal Robot
+
+"""
 import socket
 from time import sleep
 
@@ -20,20 +23,21 @@ class ur_socket_connection:
         self.s.bind((host, port)) # Bind to the port 
         print("Connection bound to: ", host, ":", str(port) )
 
-    def pass_msg(self,msg):
+    def pass_msg(self,movestring):
         """
-        Used to send a movestring to the UR5. Movestrings are generated using `generate_movestring` in the `chess_board` module
+        Used to send a `movestring` to the UR5. `movestring` is generated using `move` in the `chess_board` module
+        
         """
         self.s.listen(5) # Now wait for client connection.
         print("Listening")
         self.c, self.addr = self.s.accept() # Establish connection with client.
         self.TCP = self.c.recv(1024)
-        print("Current TCP: ", self.TCP)
+        print("Current TCP: ", self.TCP)   # Get the Tool-Center-Point from the UR and print it
         sleep(1)
-        self.msg = msg
-        self.encoded_msg = self.msg.encode('utf-8')
-        print("Sending: ", self.encoded_msg)
-        self.c.send(self.encoded_msg)
+        self.movestring = movestring
+        self.encoded_movestring = self.movestring.encode('utf-8')
+        print("Sending: ", self.encoded_movestring)
+        self.c.send(self.encoded_movestring)
         print("Message Sent")
 
 # c.close()

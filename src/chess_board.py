@@ -1,7 +1,19 @@
+"""
+This module is used for tracking the state of the game and the physical coordinates of each square.
+
+"""
 import chess
 import numpy as np
 
 class chess_board:
+    """
+    Creates a new ``chess_board`` instance, which represents the board state and physical coordinates of each square.
+
+    `x0`,`y0` should be the center of the A1 square of the board in the UR's base coordinate system.
+
+    `x7`,`y7` should be the center of the H8 square of the board in the UR's base coordinate system.
+
+    """
 
     def __init__(self, x0, y0, x7, y7):
         self.coordinates_x = np.linspace(x0, x7, 8)
@@ -12,10 +24,27 @@ class chess_board:
 
 
     def get_xy(self, Row, Col):
+        """
+        Returns the x,y location in cartesian coordinate system.
+        
+        `Col` ranges from 0 to 7 starting at A and moving to H on the chessboard
+
+        `Row` ranges from 0 to 7 starting at 1 and moving to 8 on the chessboard
+
+        """
         return [self.coordinates_x[Col], self.coordinates_y[Row]]
 
 
     def check_occupied(self, target_square):
+
+        """
+        Uses `python_chess` to verify that the target square is not occupied. Will return a 1 if the square is occupied.
+
+        `target_square` is specified from 0 to 63, starting at A1, and moving across the rows to H8. 
+        
+        See: https://python-chess.readthedocs.io/en/latest/core.html#squares
+
+        """
 
         if not self.board.piece_at(target_square):
             self.occupied = 0
@@ -25,13 +54,30 @@ class chess_board:
         return self.occupied
 
     def convert_square(self, Row, Col):
+        """
+        Used for converting from Row, Col notation to python-chess 0 to 63 notation.
 
+        `Col` ranges from 0 to 7 starting at A and moving to H on the chessboard
+
+        `Row` ranges from 0 to 7 starting at 1 and moving to 8 on the chessboard
+
+        """
         self.numbered_squares = np.arange(64).reshape(8, 8)
         self.square_number = self.numbered_squares[Row,Col]
 
         return self.square_number
 
     def move(self, Row1, Col1, Row2, Col2):
+        """
+        Used for generating a `movestring` to be used with `pass_msg` in `ur_socket_connection`
+
+        Also updates board state and prints the unicode representation of the current board.
+
+        `Col` ranges from 0 to 7 starting at A and moving to H on the chessboard
+
+        `Row` ranges from 0 to 7 starting at 1 and moving to 8 on the chessboard
+
+        """
 
         self.source_square = self.convert_square(Row1,Col1)
         self.target_square = self.convert_square(Row2,Col2)

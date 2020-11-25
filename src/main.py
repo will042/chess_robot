@@ -9,7 +9,6 @@ HOST = "192.168.0.12" # The remote host
 PORT = 8000 # The same port as used by the server
 # s = ur_socket_connection.ur_socket_connection(HOST,PORT)
 
-
 # A8=(7,0)         ...  ... H8=(7,7)=(y7,x7)
 #    .                          .
 #    .                          .
@@ -19,41 +18,31 @@ cb = chess_board.chess_board(x0 = 0.24014, y0 = -0.46005, x7 = -.02449, y7 = -0.
 recognizer = sr.Recognizer()
 microphone = sr.Microphone()
 
-
-# The generate_movestring function:
-# Converts from Position 1 = Row1, Col1
-#               Position 2 = Row2, Col2
-# Where input = (Row1, Col1, Row2, Col2) (y1,x1,y2,x2)
-# To Cartesian coordinates in meters
-# Also returns an indicator that states if the square that the piece needs
-# to move to is occupied.
-#
-# Output is a string.
-#
-# output = "(occupied_indicator, x1, y1, x2, y2)"
-
+# Function for splitting string into individual list elements (ie: 0153 -> ['0','1','5','3'])
 def split(word): 
     return [char for char in word]
 
+
+# Main loop for chess program
 while(1):
     while(1):
         input("Press Enter to continue...")
         print('State your move')
-        move = recognize_speech_from_mic(recognizer, microphone)
-        if move["transcription"]:
+        voice_move = recognize_speech_from_mic(recognizer, microphone)
+        if voice_move["transcription"]:
             break
-        if not move["success"]:
+        if not voice_move["success"]:
             break
         print("Try again...\n")
 
-    if move["error"]:
-        print("ERROR: {}".format(move["error"]))
+    if voice_move["error"]:
+        print("ERROR: {}".format(voice_move["error"]))
         break
 
-    print("You said: {}".format(move["transcription"]))
+    print("You said: {}".format(voice_move["transcription"]))
     
-    if len(move["transcription"]) == 4:
-        str_list = split(move["transcription"])
+    if len(voice_move["transcription"]) == 4:
+        str_list = split(voice_move["transcription"])
         try:
             int_list = [int(i) for i in str_list]
             print(int_list)
@@ -64,4 +53,3 @@ while(1):
                 sleep(10)
         except:
             print("Try again...\n")
-
