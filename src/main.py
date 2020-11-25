@@ -1,25 +1,25 @@
 import ur_socket_connection
 import chess_board
+import speech_recognition as sr
+from recognize_speech_from_mic import recognize_speech_from_mic
 from time import sleep
-
 
 # Initialize the socket object for communication with the teach pendant
 HOST = "192.168.0.12" # The remote host
 PORT = 8000 # The same port as used by the server
-s = ur_socket_connection.ur_socket_connection(HOST,PORT)
+# s = ur_socket_connection.ur_socket_connection(HOST,PORT)
 
-# Initialize the chessboard. Specify the length of one side of the board.
-# (x0, y0) gives the upper left corner of the board in the UR5 base coordinate system.
-# Units are in meters.
-# cb = chess_board.chess_board(x0 = 0.330, y0 = -0.8, x7 = 0.010, y7 = -0.430)
-# cb = chess_board.chess_board(x0 = 0.12950, y0 = -0.44720, x7 = -0.13589, y7 = -0.71350)
+
+# A8=(7,0)         ...  ... H8=(7,7)=(y7,x7)
+#    .                          .
+#    .                          .
+# A1=(0,0)=(y0,x0) ...  ... H1=(0,7)
 
 cb = chess_board.chess_board(x0 = 0.24014, y0 = -0.46005, x7 = -.02449, y7 = -0.72676)
+recognizer = sr.Recognizer()
+microphone = sr.Microphone()
 
-# A8=(0,0)=(y0,x0) ...  ... H8=(0,7)
-#    .                          .
-#    .                          .
-# A1=(7,0)          ...  ... H1=(7,7)=(y7,x7)
+
 # The generate_movestring function:
 # Converts from Position 1 = Row1, Col1
 #               Position 2 = Row2, Col2
@@ -32,9 +32,36 @@ cb = chess_board.chess_board(x0 = 0.24014, y0 = -0.46005, x7 = -.02449, y7 = -0.
 #
 # output = "(occupied_indicator, x1, y1, x2, y2)"
 
-x=cb.generate_movestring_alt(1,0,0,4,0) #In Row,Col notation
-print(x)
-s.pass_msg(x)  # Sends msg to UR5
+def split(word): 
+    return [char for char in word]
 
-#330,-800 top left, a8
-#10,-430 bottom right, h1
+while(1):
+    while(1):
+        input("Press Enter to continue...")
+        print('State your move')
+        move = recognize_speech_from_mic(recognizer, microphone)
+        if move["transcription"]:
+            break
+        if not move["success"]:
+            break
+        print("Try again...\n")
+
+    if move["error"]:
+        print("ERROR: {}".format(move["error"]))
+        break
+
+    print("You said: {}".format(move["transcription"]))
+    
+    if len(move["transcription"]) == 4:
+        str_list = split(move["transcription"])
+        try:
+            int_list = [int(i) for i in str_list]
+            print(int_list)
+            if all(i < 8 for i in int_list):
+                x=cb.move(int_list[0],int_list[1],int_list[2],int_list[3])
+                print(x)
+                # s.pass_msg(x)
+                sleep(10)
+        except:
+            print("Try again...\n")
+

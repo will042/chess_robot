@@ -1,65 +1,57 @@
-import numpy as np 
+import chess
+import numpy as np
 
 class chess_board:
+
     def __init__(self, x0, y0, x7, y7):
-        self.board_state = np.array([[1, 1, 1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1, 1, 1],[0, 0, 0, 0, 0, 0, 0, 0],[0, 0, 0, 0, 0, 0, 0, 0],[0, 0, 0, 0, 0, 0, 0, 0],[0, 0, 0, 0, 0, 0, 0, 0],[1, 1, 1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1, 1, 1]])
-        # self.coordinates_x = np.linspace(x0 + sidelength/8/2, x0 - 7*sidelength/8, 8)
-        # self.coordinates_y = np.linspace(y0 + 7*sidelength/8, y0 + sidelength/8/2, 8)
         self.coordinates_x = np.linspace(x0, x7, 8)
         self.coordinates_y = np.linspace(y0, y7, 8)
         # print(self.coordinates_x)
         # print(self.coordinates_y)
-        # [self.coordinates_x, self.coordinates_y] = np.meshgrid(x0 + self.sidelength_dummy, y0 + self.sidelength_dummy)
-
-
-    def check_occupied(self, Row2, Col2):
-        self.Row2 = Row2
-        self.Col2 = Col2
-        self.occupied = 0
-
-        if self.board_state[self.Row2,self.Col2] == 1 :
-            self.occupied = 1
-        
-        return self.occupied
+        self.board = chess.Board()
 
 
     def get_xy(self, Row, Col):
-        return [self.coordinates_x[Row],self.coordinates_y[Col]]
+        return [self.coordinates_x[Col], self.coordinates_y[Row]]
 
 
-    def update_board(self, Row1, Col1, Row2, Col2):
-        self.Row1 = Row1
-        self.Col1 = Col1
-        self.Row2 = Row2
-        self.Col2 = Col2
+    def check_occupied(self, target_square):
 
-        self.board_state[self.Row1, self.Col1] = 0
-        self.board_state[self.Row2, self.Col2] = 1
+        if not self.board.piece_at(target_square):
+            self.occupied = 0
+        else:
+            self.occupied = 1
 
+        return self.occupied
 
-    def generate_movestring(self, Row1, Col1, Row2, Col2):
-        self.occupied_flag = str(self.check_occupied(Row2, Col2))
-        self.point1 = self.get_xy(Row1, Col1)
-        self.point2 = self.get_xy(Row2, Col2)
-        self.update_board(Row1, Col1, Row2, Col2)
-        self.point1x = str(self.point1[0])
-        self.point1y = str(self.point1[1])
-        self.point2x = str(self.point2[0])
-        self.point2y = str(self.point2[1])
-        self.tuple = self.occupied_flag, self.point1x, self.point1y, self.point2x, self.point2y
-        self.string = '(' + ', '.join(self.tuple) + ')'
-        return self.string
- 
+    def convert_square(self, Row, Col):
 
-    def generate_movestring_alt(self, occupied, Row1, Col1, Row2, Col2):
-        self.occupied_flag = str(self.check_occupied(Row2, Col2))
-        self.point1 = self.get_xy(Row1, Col1)
-        self.point2 = self.get_xy(Row2, Col2)
-        self.update_board(Row1, Col1, Row2, Col2)
-        self.point1x = str(self.point1[0])
-        self.point1y = str(self.point1[1])
-        self.point2x = str(self.point2[0])
-        self.point2y = str(self.point2[1])
-        self.tuple = str(occupied), self.point1x, self.point1y, self.point2x, self.point2y
-        self.string = '(' + ', '.join(self.tuple) + ')'
-        return self.string
+        self.numbered_squares = np.arange(64).reshape(8, 8)
+        self.square_number = self.numbered_squares[Row,Col]
+
+        return self.square_number
+
+    def move(self, Row1, Col1, Row2, Col2):
+
+        self.source_square = self.convert_square(Row1,Col1)
+        self.target_square = self.convert_square(Row2,Col2)
+
+        self.occupied_flag = str(self.check_occupied(self.target_square))
+
+        self.source_xy = self.get_xy(Row1, Col1)
+        self.target_xy = self.get_xy(Row2, Col2)
+        self.source_x = str(self.source_xy[0])
+        self.source_y = str(self.source_xy[1])
+        self.target_x = str(self.target_xy[0])
+        self.target_y = str(self.target_xy[1])
+        self.tuple = self.occupied_flag, self.source_x, self.source_y, self.target_x, self.target_y
+        self.move_string = '(' + ', '.join(self.tuple) + ')'
+
+        self.desired_move = chess.Move(self.source_square, self.target_square)
+        self.board.push(self.desired_move)
+
+        print(self.desired_move)
+        print(self.move_string+"\n")
+        print(self.board.unicode()+"\n")
+
+        return self.move_string

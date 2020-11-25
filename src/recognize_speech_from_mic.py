@@ -1,7 +1,8 @@
+# This code adapted from https://realpython.com/python-speech-recognition/
+
 import speech_recognition as sr
 from time import sleep
-import chess_board
-import ur_socket_connection
+
 
 def recognize_speech_from_mic(recognizer, microphone):
     """Transcribe speech from recorded from `microphone`.
@@ -45,50 +46,3 @@ def recognize_speech_from_mic(recognizer, microphone):
         response["error"] = "Unable to recognize speech"
 
     return response
-
-def split(word): 
-    return [char for char in word]  
-
-if __name__ == "__main__":
-
-    recognizer = sr.Recognizer()
-    microphone = sr.Microphone()
-    cb = chess_board.chess_board(x0 = 0.24014, y0 = -0.46005, x7 = -.02449, y7 = -0.72676)
-    HOST = "192.168.0.12"
-    PORT = 8000
-    s = ur_socket_connection.ur_socket_connection(HOST,PORT)
-
-    # show instructions and wait 3 seconds before starting the game
-    print("Welcome to robot chess\n")
-    sleep(3)
-
-    while(1):
-        while(1):
-            input("Press Enter to continue...")
-            print('State your move')
-            move = recognize_speech_from_mic(recognizer, microphone)
-            if move["transcription"]:
-                break
-            if not move["success"]:
-                break
-            print("Try again...\n")
-
-        if move["error"]:
-            print("ERROR: {}".format(move["error"]))
-            break
-
-        print("You said: {}".format(move["transcription"]))
-        
-        if len(move["transcription"]) == 4:
-            print("You said: {}".format(move["transcription"]))
-            str_list = move["transcription"]
-            try:
-                int_list = [int(i) for i in str_list]
-                print(int_list)
-                if all(i < 8 for i in int_list):
-                    x=cb.generate_movestring(int_list[0],int_list[1],int_list[2],int_list[3])
-                    print(x)
-                    s.pass_msg(x)
-                    sleep(10)
-            except:
-                print("Try again...\n")

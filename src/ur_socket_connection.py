@@ -3,7 +3,15 @@ import socket
 from time import sleep
 
 class ur_socket_connection:
+    """
+    Creates a new ``ur_socket_connection`` instance, which represents a connection to the UR5e.
 
+    `host` and `port` should be the IP address and desired socket port for the computer used to control the robot; 
+    
+    `host` and `port` must also be specified in '/urprograms/chess_movement_program.script'
+
+    """
+    
     def __init__(self, host, port):
         # self.host = host # The remote host
         # self.port = port # The same port as used by the server
@@ -13,6 +21,9 @@ class ur_socket_connection:
         print("Connection bound to: ", host, ":", str(port) )
 
     def pass_msg(self,msg):
+        """
+        Used to send a movestring to the UR5. Movestrings are generated using `generate_movestring` in the `chess_board` module
+        """
         self.s.listen(5) # Now wait for client connection.
         print("Listening")
         self.c, self.addr = self.s.accept() # Establish connection with client.
