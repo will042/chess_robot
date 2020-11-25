@@ -50,6 +50,5 @@ while(1):
                 x=cb.move(int_list[0],int_list[1],int_list[2],int_list[3])
                 print(x)
                 # s.pass_msg(x)
-                sleep(10)
         except:
             print("Try again...\n")
