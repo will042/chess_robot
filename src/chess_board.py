@@ -7,8 +7,8 @@ class chess_board:
         # self.coordinates_y = np.linspace(y0 + 7*sidelength/8, y0 + sidelength/8/2, 8)
         self.coordinates_x = np.linspace(x0, x7, 8)
         self.coordinates_y = np.linspace(y0, y7, 8)
-        print(self.coordinates_x)
-        print(self.coordinates_y)
+        # print(self.coordinates_x)
+        # print(self.coordinates_y)
         # [self.coordinates_x, self.coordinates_y] = np.meshgrid(x0 + self.sidelength_dummy, y0 + self.sidelength_dummy)
 
 
@@ -24,7 +24,7 @@ class chess_board:
 
 
     def get_xy(self, Row, Col):
-        return [self.coordinates_x[Col],self.coordinates_y[Row]]
+        return [self.coordinates_x[Row],self.coordinates_y[Col]]
 
 
     def update_board(self, Row1, Col1, Row2, Col2):
@@ -50,3 +50,16 @@ class chess_board:
         self.string = '(' + ', '.join(self.tuple) + ')'
         return self.string
  
+
+    def generate_movestring_alt(self, occupied, Row1, Col1, Row2, Col2):
+        self.occupied_flag = str(self.check_occupied(Row2, Col2))
+        self.point1 = self.get_xy(Row1, Col1)
+        self.point2 = self.get_xy(Row2, Col2)
+        self.update_board(Row1, Col1, Row2, Col2)
+        self.point1x = str(self.point1[0])
+        self.point1y = str(self.point1[1])
+        self.point2x = str(self.point2[0])
+        self.point2y = str(self.point2[1])
+        self.tuple = str(occupied), self.point1x, self.point1y, self.point2x, self.point2y
+        self.string = '(' + ', '.join(self.tuple) + ')'
+        return self.string

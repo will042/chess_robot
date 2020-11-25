@@ -11,8 +11,10 @@ s = ur_socket_connection.ur_socket_connection(HOST,PORT)
 # Initialize the chessboard. Specify the length of one side of the board.
 # (x0, y0) gives the upper left corner of the board in the UR5 base coordinate system.
 # Units are in meters.
-cb = chess_board.chess_board(x0 = 0.330, y0 = -0.8, x7 = 0.010, y7 = -0.430)
+# cb = chess_board.chess_board(x0 = 0.330, y0 = -0.8, x7 = 0.010, y7 = -0.430)
+# cb = chess_board.chess_board(x0 = 0.12950, y0 = -0.44720, x7 = -0.13589, y7 = -0.71350)
 
+cb = chess_board.chess_board(x0 = 0.24014, y0 = -0.46005, x7 = -.02449, y7 = -0.72676)
 
 # A8=(0,0)=(y0,x0) ...  ... H8=(0,7)
 #    .                          .
@@ -30,7 +32,7 @@ cb = chess_board.chess_board(x0 = 0.330, y0 = -0.8, x7 = 0.010, y7 = -0.430)
 #
 # output = "(occupied_indicator, x1, y1, x2, y2)"
 
-x=cb.generate_movestring(0,1,1,1) #In Row,Col notation
+x=cb.generate_movestring_alt(1,0,0,4,0) #In Row,Col notation
 print(x)
 s.pass_msg(x)  # Sends msg to UR5
 
