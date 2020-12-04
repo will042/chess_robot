@@ -31,7 +31,7 @@ This is a project to develop a voice controlled chess robot. A Universal Robotic
   
 ### How it Works:
   
-  ![ProcessFlow](https://raw.githubusercontent.com/will042/chess_robot/master/images/Process_Flow.png)
+  ![ProcessFlow](https://raw.githubusercontent.com/will042/chess_robot/master/images/ProcessFlowDiagram.png)
   
   
 ### Goals for Improvement:
